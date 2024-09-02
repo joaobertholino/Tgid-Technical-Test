@@ -9,6 +9,7 @@ import dev.joaobertholino.tgidtechnicaltest.repository.EnterpriseRepository;
 import dev.joaobertholino.tgidtechnicaltest.repository.TransactionRepository;
 import dev.joaobertholino.tgidtechnicaltest.service.exception.ClientNotFound;
 import dev.joaobertholino.tgidtechnicaltest.service.exception.EnterpriseNotFound;
+import dev.joaobertholino.tgidtechnicaltest.service.exception.TransactionValueInvalid;
 import dev.joaobertholino.tgidtechnicaltest.service.mailutil.SendMailUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,9 +44,15 @@ public class TransactionService {
 
 		Double totalTaxPercent = calculateTaxPercent(enterprise, transactionType);
 		BigDecimal totalDiscount = value.multiply(BigDecimal.valueOf(totalTaxPercent));
-		BigDecimal finalValue = (transactionType.equals(TransactionType.WITHDRAWAL))
-				? enterprise.getBalance().subtract(value.add(totalDiscount))
-				: enterprise.getBalance().add(value.subtract(totalDiscount));
+
+		BigDecimal finalValue;
+		if (transactionType.equals(TransactionType.WITHDRAWAL) && (enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() > value.doubleValue())) {
+			finalValue = enterprise.getBalance().subtract(value.add(totalDiscount));
+		} else if (transactionType.equals(TransactionType.DEPOSIT) && value.doubleValue() > 0.0) {
+			finalValue = enterprise.getBalance().add(value.subtract(totalDiscount));
+		} else {
+			throw new TransactionValueInvalid("Invalid transaction values");
+		}
 
 		enterprise.setBalance(finalValue);
 		this.enterpriseRepository.save(enterprise);
