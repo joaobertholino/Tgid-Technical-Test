@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,9 +54,7 @@ public class TransactionService {
 		Transaction transaction = new Transaction(enterprise, client, transactionType, totalDiscount);
 		this.transactionRepository.save(transaction);
 
-		DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
-		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + decimalFormat.format(transaction.getValue()) + " was successful.");
-
+		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + transaction.getValue() + " was successful.");
 		this.restTemplate.postForEntity(this.webhookUrl, transaction, String.class);
 	}
 
