@@ -50,7 +50,7 @@ public class TransactionService {
 		enterprise.setBalance(finalValue);
 		this.enterpriseRepository.save(enterprise);
 
-		Transaction transaction = new Transaction(enterprise, client, transactionType, totalDiscount);
+		Transaction transaction = new Transaction(enterprise, client, transactionType, value.add(totalDiscount));
 		this.transactionRepository.save(transaction);
 
 		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + transaction.getValue() + " was successful.");
