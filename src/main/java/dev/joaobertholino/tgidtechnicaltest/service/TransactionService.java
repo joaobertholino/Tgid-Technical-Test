@@ -27,14 +27,16 @@ public class TransactionService {
 	private final ClientRepository clientRepository;
 	private final EnterpriseRepository enterpriseRepository;
 	private final TransactionRepository transactionRepository;
+	private final RestTemplate restTemplate;
 
 	@Value(value = "${webhook.url}")
 	private String webhookUrl;
 
-	public TransactionService(ClientRepository clientRepository, EnterpriseRepository enterpriseRepository, TransactionRepository transactionRepository) {
+	public TransactionService(ClientRepository clientRepository, EnterpriseRepository enterpriseRepository, TransactionRepository transactionRepository, RestTemplate restTemplate) {
 		this.clientRepository = clientRepository;
 		this.enterpriseRepository = enterpriseRepository;
 		this.transactionRepository = transactionRepository;
+		this.restTemplate = restTemplate;
 	}
 
 	@Transactional
@@ -63,8 +65,7 @@ public class TransactionService {
 		DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
 		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + decimalFormat.format(transaction.getValue()) + " was successful.");
 
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.postForEntity(this.webhookUrl, transaction, String.class);
+		this.restTemplate.postForEntity(this.webhookUrl, transaction, String.class);
 	}
 
 	private Double calculateTaxPercent(Enterprise enterprise, TransactionType transactionType){
