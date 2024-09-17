@@ -14,11 +14,14 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class CallbackExceptionHandler {
+	private final RestTemplate restTemplate;
 
 	@Value(value = "${webhook.url}")
 	private String webhookUrl;
 
-	private final RestTemplate restTemplate = new RestTemplate();
+	public CallbackExceptionHandler(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
 	@ExceptionHandler(RestClientException.class)
 	private ResponseEntity<ExceptionTemplate> restClientException(RestClientException e, HttpServletRequest servletRequest) {

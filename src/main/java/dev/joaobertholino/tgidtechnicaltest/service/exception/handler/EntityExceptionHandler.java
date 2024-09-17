@@ -16,11 +16,14 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class EntityExceptionHandler {
+	private final RestTemplate restTemplate;
 
 	@Value(value = "${webhook.url}")
 	private String webhookUrl;
 
-	private final RestTemplate restTemplate = new RestTemplate();
+	public EntityExceptionHandler(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
 	@ExceptionHandler(EnterpriseNotFound.class)
 	private ResponseEntity<ExceptionTemplate> enterpriseNotFound(EnterpriseNotFound e, HttpServletRequest servletRequest) {

@@ -16,11 +16,14 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class MailExceptionHandler {
+	private final RestTemplate restTemplate;
 
 	@Value(value = "${webhook.url}")
 	private String webhookUrl;
 
-	private final RestTemplate restTemplate = new RestTemplate();
+	public MailExceptionHandler(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
 	@ExceptionHandler(MailAuthenticationException.class)
 	private ResponseEntity<ExceptionTemplate> mailAuthenticationException(MailAuthenticationException e, HttpServletRequest servletRequest) {
