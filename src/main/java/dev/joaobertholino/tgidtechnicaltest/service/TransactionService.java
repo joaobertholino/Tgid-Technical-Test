@@ -47,7 +47,6 @@ public class TransactionService {
 		BigDecimal totalDiscount = value.multiply(BigDecimal.valueOf(totalTaxPercent));
 
 		BigDecimal finalValue = validateFinalValue(enterprise, transactionType, value, totalDiscount);
-
 		enterprise.setBalance(finalValue);
 		this.enterpriseRepository.save(enterprise);
 
