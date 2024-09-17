@@ -47,14 +47,7 @@ public class TransactionService {
 		Double totalTaxPercent = calculateTaxPercent(enterprise, transactionType);
 		BigDecimal totalDiscount = value.multiply(BigDecimal.valueOf(totalTaxPercent));
 
-		BigDecimal finalValue;
-		if (transactionType.equals(TransactionType.WITHDRAWAL) && (enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() > value.doubleValue())) {
-			finalValue = enterprise.getBalance().subtract(value.add(totalDiscount));
-		} else if (transactionType.equals(TransactionType.DEPOSIT) && value.doubleValue() > 0.0) {
-			finalValue = enterprise.getBalance().add(value.subtract(totalDiscount));
-		} else {
-			throw new TransactionValueInvalid("Invalid transaction values");
-		}
+		BigDecimal finalValue = validateFinalValue(enterprise, transactionType, value, totalDiscount);
 
 		enterprise.setBalance(finalValue);
 		this.enterpriseRepository.save(enterprise);
@@ -68,7 +61,17 @@ public class TransactionService {
 		this.restTemplate.postForEntity(this.webhookUrl, transaction, String.class);
 	}
 
-	private Double calculateTaxPercent(Enterprise enterprise, TransactionType transactionType){
+	private BigDecimal validateFinalValue(Enterprise enterprise, TransactionType transactionType, BigDecimal value, BigDecimal totalDiscount) {
+		if (transactionType.equals(TransactionType.WITHDRAWAL) && (enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() > value.doubleValue())) {
+			return enterprise.getBalance().subtract(value.add(totalDiscount));
+		} else if (transactionType.equals(TransactionType.DEPOSIT) && value.doubleValue() > 0.0) {
+			return enterprise.getBalance().add(value.subtract(totalDiscount));
+		} else {
+			throw new TransactionValueInvalid("Invalid transaction values");
+		}
+	}
+
+	private Double calculateTaxPercent(Enterprise enterprise, TransactionType transactionType) {
 		List<Double> listTaxPercent = new ArrayList<>();
 		enterprise.getTaxList().forEach(tax -> {
 			if (tax.getTransactionType().equals(transactionType)) {
