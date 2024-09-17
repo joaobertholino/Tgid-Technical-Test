@@ -42,9 +42,4 @@ public class DatabaseConfiguration implements CommandLineRunner {
 		enterprise.getTaxList().addAll(Arrays.asList(taxOne, taxTwo));
 		this.enterpriseRepository.save(enterprise);
 	}
-
-	@Bean
-	public RestTemplate restTemplateCreate() {
-		return new RestTemplate();
-	}
 }
