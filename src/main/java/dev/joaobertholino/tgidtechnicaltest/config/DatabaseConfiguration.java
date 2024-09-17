@@ -8,7 +8,9 @@ import dev.joaobertholino.tgidtechnicaltest.repository.ClientRepository;
 import dev.joaobertholino.tgidtechnicaltest.repository.EnterpriseRepository;
 import dev.joaobertholino.tgidtechnicaltest.repository.TaxRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -35,9 +37,14 @@ public class DatabaseConfiguration implements CommandLineRunner {
 
 		Tax taxOne = new Tax(TransactionType.WITHDRAWAL, enterprise, 0.2);
 		Tax taxTwo = new Tax(TransactionType.DEPOSIT, enterprise, 0.1);
-		this.taxRepository.saveAll(Arrays.asList(taxOne,taxTwo));
+		this.taxRepository.saveAll(Arrays.asList(taxOne, taxTwo));
 
 		enterprise.getTaxList().addAll(Arrays.asList(taxOne, taxTwo));
 		this.enterpriseRepository.save(enterprise);
+	}
+
+	@Bean
+	public RestTemplate restTemplateCreate() {
+		return new RestTemplate();
 	}
 }
