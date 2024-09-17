@@ -7,7 +7,8 @@ import org.hibernate.validator.constraints.br.CNPJ;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "TB_ENTERPRISE")
