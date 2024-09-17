@@ -29,6 +29,7 @@ public class Transaction implements Serializable {
 	@Enumerated(value = EnumType.STRING)
 	private TransactionType transactionType;
 
+	@Column(scale = 2)
 	private BigDecimal value;
 
 	public Transaction() {

@@ -28,6 +28,7 @@ public class Enterprise implements Serializable {
 	@Column(unique = true)
 	private String cnpj;
 
+	@Column(scale = 2)
 	private BigDecimal balance;
 
 	@OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
