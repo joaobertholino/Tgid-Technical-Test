@@ -46,18 +46,18 @@ public class TransactionService {
 		Double totalTaxPercent = calculateTaxPercent(enterprise, transactionType);
 		BigDecimal totalDiscount = value.multiply(BigDecimal.valueOf(totalTaxPercent));
 
-		BigDecimal finalValue = validateFinalValue(enterprise, transactionType, value, totalDiscount);
+		BigDecimal finalValue = calculateFinalValue(enterprise, transactionType, value, totalDiscount);
 		enterprise.setBalance(finalValue);
 		this.enterpriseRepository.save(enterprise);
 
-		Transaction transaction = new Transaction(enterprise, client, transactionType, value.add(totalDiscount));
+		Transaction transaction = new Transaction(enterprise, client, transactionType, value, totalDiscount, value.subtract(totalDiscount));
 		this.transactionRepository.save(transaction);
 
 		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + transaction.getValue() + " was successful.");
 		this.restTemplate.postForEntity(this.webhookUrl, transaction, String.class);
 	}
 
-	private BigDecimal validateFinalValue(Enterprise enterprise, TransactionType transactionType, BigDecimal value, BigDecimal totalDiscount) {
+	private BigDecimal calculateFinalValue(Enterprise enterprise, TransactionType transactionType, BigDecimal value, BigDecimal totalDiscount) {
 		if (transactionType.equals(TransactionType.WITHDRAWAL) && (enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() > value.doubleValue())) {
 			return enterprise.getBalance().subtract(value.add(totalDiscount));
 		} else if (transactionType.equals(TransactionType.DEPOSIT) && value.doubleValue() > 0.0) {

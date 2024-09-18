@@ -32,14 +32,22 @@ public class Transaction implements Serializable {
 	@Column(scale = 2)
 	private BigDecimal value;
 
+	@Column(scale = 2)
+	private BigDecimal taxValue;
+
+	@Column(scale = 2)
+	private BigDecimal subTotal;
+
 	public Transaction() {
 	}
 
-	public Transaction(Enterprise enterprise, Client client, TransactionType transactionType, BigDecimal value) {
+	public Transaction(Enterprise enterprise, Client client, TransactionType transactionType, BigDecimal value, BigDecimal taxValue, BigDecimal subTotal) {
 		this.enterprise = enterprise;
 		this.client = client;
 		this.transactionType = transactionType;
 		this.value = value;
+		this.taxValue = taxValue;
+		this.subTotal = subTotal;
 	}
 
 	public Client getClient() {
@@ -80,6 +88,22 @@ public class Transaction implements Serializable {
 
 	public void setValue(BigDecimal value) {
 		this.value = value;
+	}
+
+	public BigDecimal getTaxValue() {
+		return taxValue;
+	}
+
+	public void setTaxValue(BigDecimal taxValue) {
+		this.taxValue = taxValue;
+	}
+
+	public BigDecimal getSubTotal() {
+		return subTotal;
+	}
+
+	public void setSubTotal(BigDecimal subTotal) {
+		this.subTotal = subTotal;
 	}
 
 	@Override
