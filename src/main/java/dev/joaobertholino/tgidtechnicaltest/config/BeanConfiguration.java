@@ -1,5 +1,6 @@
 package dev.joaobertholino.tgidtechnicaltest.config;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -9,6 +10,6 @@ public class BeanConfiguration {
 
 	@Bean
 	public RestTemplate restTemplateBeanCreation() {
-		return new RestTemplate();
+		return new RestTemplateBuilder().build();
 	}
 }
