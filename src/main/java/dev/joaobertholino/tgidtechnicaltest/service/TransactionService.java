@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class TransactionService {
+public class TransactionService implements ServiceInterface {
 	private final ClientRepository clientRepository;
 	private final EnterpriseRepository enterpriseRepository;
 	private final TransactionRepository transactionRepository;
@@ -38,6 +38,7 @@ public class TransactionService {
 		this.restTemplate = restTemplate;
 	}
 
+	@Override
 	@Transactional
 	public void carryOutTransaction(Integer enterpriseId, Integer clientId, BigDecimal value, TransactionType transactionType) {
 		Enterprise enterprise = this.enterpriseRepository.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFound("Enterprise not found in database"));
@@ -58,7 +59,8 @@ public class TransactionService {
 	}
 
 	private BigDecimal calculateFinalValue(Enterprise enterprise, TransactionType transactionType, BigDecimal value, BigDecimal totalDiscount) {
-		if (transactionType.equals(TransactionType.WITHDRAWAL) && (enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() > value.doubleValue())) {
+		if (transactionType.equals(TransactionType.WITHDRAWAL) &&
+				(enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() > value.add(totalDiscount).doubleValue())) {
 			return enterprise.getBalance().subtract(value.add(totalDiscount));
 		} else if (transactionType.equals(TransactionType.DEPOSIT) && value.doubleValue() > 0.0) {
 			return enterprise.getBalance().add(value.subtract(totalDiscount));
