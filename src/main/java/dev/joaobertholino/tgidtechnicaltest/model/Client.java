@@ -20,14 +20,15 @@ public class Client implements Serializable {
 	private Integer id;
 
 	@NotBlank
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@Email
-	@Column(unique = true)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@CPF
-	@Column(unique = true)
+	@Column(nullable = false, unique = true)
 	private String cpf;
 
 	public Client() {

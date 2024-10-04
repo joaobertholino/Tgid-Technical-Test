@@ -3,6 +3,7 @@ package dev.joaobertholino.tgidtechnicaltest.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -22,13 +23,14 @@ public class Enterprise implements Serializable {
 	private Integer id;
 
 	@NotBlank
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@CNPJ
-	@Column(unique = true)
+	@Column(nullable = false, unique = true)
 	private String cnpj;
 
-	@Column(scale = 2)
+	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal balance;
 
 	@OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)

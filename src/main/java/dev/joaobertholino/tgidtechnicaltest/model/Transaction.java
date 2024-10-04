@@ -26,16 +26,16 @@ public class Transaction implements Serializable {
 	@JoinColumn(name = "client_id")
 	private Client client;
 
-	@Enumerated(value = EnumType.STRING)
+	@Enumerated(value = EnumType.ORDINAL)
 	private TransactionType transactionType;
 
-	@Column(scale = 2)
+	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal value;
 
-	@Column(scale = 2)
+	@Column(nullable = false, scale = 2)
 	private BigDecimal taxValue;
 
-	@Column(scale = 2)
+	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal subTotal;
 
 	public Transaction() {

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.DecimalMin;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 public class Tax implements Serializable {
@@ -28,18 +29,18 @@ public class Tax implements Serializable {
 
 	@DecimalMax(value = "1.0")
 	@DecimalMin(value = "0.0")
-	private Double percent;
+	private BigDecimal percent;
 
 	public Tax() {
 	}
 
-	public Tax(TransactionType transactionType, Enterprise enterprise, Double percent) {
+	public Tax(TransactionType transactionType, Enterprise enterprise, BigDecimal percent) {
 		this.transactionType = transactionType;
 		this.enterprise = enterprise;
 		this.percent = percent;
 	}
 
-	public Tax(Enterprise enterprise, Integer id, Double percent, TransactionType transactionType) {
+	public Tax(Enterprise enterprise, Integer id, BigDecimal percent, TransactionType transactionType) {
 		this.enterprise = enterprise;
 		this.id = id;
 		this.percent = percent;
@@ -63,11 +64,11 @@ public class Tax implements Serializable {
 		this.id = id;
 	}
 
-	public @DecimalMax(value = "1.0") @DecimalMin(value = "0.0") Double getPercent() {
+	public @DecimalMax(value = "1.0") @DecimalMin(value = "0.0") BigDecimal getPercent() {
 		return percent;
 	}
 
-	public void setPercent(@DecimalMax(value = "1.0") @DecimalMin(value = "0.0") Double percent) {
+	public void setPercent(@DecimalMax(value = "1.0") @DecimalMin(value = "0.0") BigDecimal percent) {
 		this.percent = percent;
 	}
 
