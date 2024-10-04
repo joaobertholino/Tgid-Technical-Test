@@ -28,21 +28,22 @@ public class TransactionServiceTest {
 
 	@Test
 	@DisplayName(value = "Test that verifies the recovery of Enterprise and Client.")
-	void carryOutTransaction() {
-		Enterprise enterpriseMock = new Enterprise(BigDecimal.valueOf(100.00), "87600058000154", 1, "Enterprise Test");
-		Client clientMock = new Client("45301651838", "noreply@email.com", 1, "Client Test");
+	void validateTrueData() {
+		Enterprise enterpriseTest = new Enterprise(BigDecimal.valueOf(100), "87600058000154", 1, "Enterprise Test One");
+		Tax taxOne = new Tax(TransactionType.WITHDRAWAL, enterpriseTest, BigDecimal.valueOf(0.2));
+		Tax taxTwo = new Tax(TransactionType.DEPOSIT, enterpriseTest, BigDecimal.valueOf(0.1));
+		enterpriseTest.getTaxList().addAll(Arrays.asList(taxOne, taxTwo));
 
-		Tax taxOne = new Tax(TransactionType.WITHDRAWAL, enterpriseMock, BigDecimal.valueOf(0.2));
-		Tax taxTwo = new Tax(TransactionType.DEPOSIT, enterpriseMock, BigDecimal.valueOf(0.1));
-		enterpriseMock.getTaxList().addAll(Arrays.asList(taxOne, taxTwo));
+		Client clientOne = new Client("45301651838", "noreply@email.com", 1, "Client Test One");
 
-		Mockito.when(this.enterpriseRepository.findById(enterpriseMock.getId())).thenReturn(Optional.of(enterpriseMock));
-		Mockito.when(this.clientRepository.findById(clientMock.getId())).thenReturn(Optional.of(clientMock));
+		Mockito.when(this.enterpriseRepository.findById(enterpriseTest.getId())).thenReturn(Optional.of(enterpriseTest));
+		Mockito.when(this.clientRepository.findById(clientOne.getId())).thenReturn(Optional.of(clientOne));
 
 		Optional<Enterprise> optionalEnterprise = this.enterpriseRepository.findById(1);
 		Optional<Client> optionalClient = this.clientRepository.findById(1);
 
 		Assertions.assertDoesNotThrow(() -> optionalEnterprise.orElseThrow());
+		Assertions.assertEquals(BigDecimal.valueOf(100), optionalEnterprise.get().getBalance());
 		Assertions.assertInstanceOf(Enterprise.class, optionalEnterprise.get());
 
 		Assertions.assertDoesNotThrow(() -> optionalClient.orElseThrow());
