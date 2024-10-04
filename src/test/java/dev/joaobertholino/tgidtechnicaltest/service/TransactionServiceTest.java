@@ -32,8 +32,8 @@ public class TransactionServiceTest {
 		Enterprise enterpriseMock = new Enterprise(BigDecimal.valueOf(100.00), "87600058000154", 1, "Enterprise Test");
 		Client clientMock = new Client("45301651838", "noreply@email.com", 1, "Client Test");
 
-		Tax taxOne = new Tax(TransactionType.WITHDRAWAL, enterpriseMock, 0.2);
-		Tax taxTwo = new Tax(TransactionType.DEPOSIT, enterpriseMock, 0.1);
+		Tax taxOne = new Tax(TransactionType.WITHDRAWAL, enterpriseMock, BigDecimal.valueOf(0.2));
+		Tax taxTwo = new Tax(TransactionType.DEPOSIT, enterpriseMock, BigDecimal.valueOf(0.1));
 		enterpriseMock.getTaxList().addAll(Arrays.asList(taxOne, taxTwo));
 
 		Mockito.when(this.enterpriseRepository.findById(enterpriseMock.getId())).thenReturn(Optional.of(enterpriseMock));

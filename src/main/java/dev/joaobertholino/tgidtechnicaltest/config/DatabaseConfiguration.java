@@ -35,8 +35,8 @@ public class DatabaseConfiguration implements CommandLineRunner {
 		Enterprise enterprise = new Enterprise("Random Enterprise", "87600058000154", BigDecimal.valueOf(100.0));
 		this.enterpriseRepository.save(enterprise);
 
-		Tax taxOne = new Tax(TransactionType.WITHDRAWAL, enterprise, 0.2);
-		Tax taxTwo = new Tax(TransactionType.DEPOSIT, enterprise, 0.1);
+		Tax taxOne = new Tax(TransactionType.WITHDRAWAL, enterprise, BigDecimal.valueOf(0.2));
+		Tax taxTwo = new Tax(TransactionType.DEPOSIT, enterprise, BigDecimal.valueOf(0.1));
 		this.taxRepository.saveAll(Arrays.asList(taxOne, taxTwo));
 
 		enterprise.getTaxList().addAll(Arrays.asList(taxOne, taxTwo));
