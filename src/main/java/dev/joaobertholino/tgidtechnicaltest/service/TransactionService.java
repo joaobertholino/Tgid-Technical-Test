@@ -17,9 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.text.NumberFormat;
+import java.util.*;
 
 @Service
 public class TransactionService implements ServiceInterface {
@@ -54,8 +53,9 @@ public class TransactionService implements ServiceInterface {
 		Transaction transaction = new Transaction(enterprise, client, transactionType, value, totalDiscount, value.subtract(totalDiscount));
 		this.transactionRepository.save(transaction);
 
-		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + transaction.getValue() + " was successful.");
-		this.restTemplate.postForEntity(this.webhookUrl, transaction, String.class);
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + currencyFormatter.format(transaction.getValue()) + " was successful.");
+		this.restTemplate.postForObject(this.webhookUrl, transaction, String.class);
 	}
 
 	private BigDecimal calculateFinalValue(Enterprise enterprise, TransactionType transactionType, BigDecimal value, BigDecimal totalDiscount) {
@@ -73,7 +73,7 @@ public class TransactionService implements ServiceInterface {
 		List<Double> listTaxPercent = new ArrayList<>();
 		enterprise.getTaxList().forEach(tax -> {
 			if (tax.getTransactionType().equals(transactionType)) {
-				listTaxPercent.add(tax.getPercent());
+				listTaxPercent.add(tax.getPercent().doubleValue());
 			}
 		});
 		return listTaxPercent.stream().filter(Objects::nonNull).reduce(0.0, Double::sum);
