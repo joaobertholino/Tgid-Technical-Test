@@ -50,7 +50,7 @@ public class TransactionService implements ServiceInterface {
 		enterprise.setBalance(finalValue);
 		this.enterpriseRepository.save(enterprise);
 
-		Transaction transaction = new Transaction(enterprise, client, transactionType, value, totalDiscount, value.subtract(totalDiscount));
+		Transaction transaction = createTransaction(enterprise, client, transactionType, value, totalDiscount);
 		this.transactionRepository.save(transaction);
 
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
@@ -58,9 +58,16 @@ public class TransactionService implements ServiceInterface {
 		this.restTemplate.postForObject(this.webhookUrl, transaction, String.class);
 	}
 
+	private Transaction createTransaction(Enterprise enterprise, Client client, TransactionType transactionType, BigDecimal value, BigDecimal totalDiscount) {
+		if (transactionType.equals(TransactionType.DEPOSIT)) {
+			return new Transaction(enterprise, client, transactionType, value, totalDiscount, value.subtract(totalDiscount));
+		}
+		return new Transaction(enterprise, client, transactionType, value, totalDiscount, value.add(totalDiscount));
+	}
+
 	private BigDecimal calculateFinalValue(Enterprise enterprise, TransactionType transactionType, BigDecimal value, BigDecimal totalDiscount) {
 		if (transactionType.equals(TransactionType.WITHDRAWAL) &&
-				(enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() > value.add(totalDiscount).doubleValue())) {
+				(enterprise.getBalance().doubleValue() > 0.0 && enterprise.getBalance().doubleValue() >= value.add(totalDiscount).doubleValue())) {
 			return enterprise.getBalance().subtract(value.add(totalDiscount));
 		} else if (transactionType.equals(TransactionType.DEPOSIT) && value.doubleValue() > 0.0) {
 			return enterprise.getBalance().add(value.subtract(totalDiscount));
