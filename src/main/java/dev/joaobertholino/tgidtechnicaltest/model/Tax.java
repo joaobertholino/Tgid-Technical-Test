@@ -5,6 +5,7 @@ import dev.joaobertholino.tgidtechnicaltest.model.enums.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,15 +21,17 @@ public class Tax implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
+	@Column(nullable = false)
 	private TransactionType transactionType;
 
 	@ManyToOne
-	@JoinColumn(name = "enterprise_id")
+	@JoinColumn(nullable = false, name = "enterprise_id")
 	private Enterprise enterprise;
 
 	@DecimalMax(value = "1.0")
 	@DecimalMin(value = "0.0")
+	@Column(nullable = false)
 	private BigDecimal percent;
 
 	public Tax() {

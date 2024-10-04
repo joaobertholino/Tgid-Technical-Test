@@ -19,14 +19,15 @@ public class Transaction implements Serializable {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "enterprise_id")
+	@JoinColumn(nullable = false, name = "enterprise_id")
 	private Enterprise enterprise;
 
 	@ManyToOne
-	@JoinColumn(name = "client_id")
+	@JoinColumn(nullable = false, name = "client_id")
 	private Client client;
 
 	@Enumerated(value = EnumType.ORDINAL)
+	@Column(nullable = false)
 	private TransactionType transactionType;
 
 	@Column(nullable = false, precision = 10, scale = 2)
