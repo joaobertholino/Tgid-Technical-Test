@@ -18,7 +18,7 @@ public class TransactionController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<Void> carryOutTransaction(Integer enterpriseId, Integer clientId, BigDecimal value, TransactionType transactionType) {
+	public ResponseEntity<Void> carryOutTransaction(@RequestParam Integer enterpriseId, @RequestParam Integer clientId, @RequestParam BigDecimal value, @RequestParam TransactionType transactionType) {
 		this.serviceInterface.carryOutTransaction(enterpriseId, clientId, value, transactionType);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
