@@ -1,7 +1,7 @@
 services:
   app:
     container_name: tgid-technical-test
-    image: tgid-technical-test:latest
+    image: joaobertholino/tgid-technical-test:latest
     build:
       context: .
       dockerfile: Dockerfile
