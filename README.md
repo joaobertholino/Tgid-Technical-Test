@@ -12,7 +12,7 @@ MailTrap para simulação de envio de emails para Clientes.
   POST /transaction
 ```
 
-### Corpo da requisição > form-data / x-www-form-urlencoded:
+### Corpo da requisição - JSON
 
 |     Parâmetro     |       Tipo        | Obrigatório | Descrição                                                                                |
 |:-----------------:|:-----------------:|:-----------:|:-----------------------------------------------------------------------------------------|
