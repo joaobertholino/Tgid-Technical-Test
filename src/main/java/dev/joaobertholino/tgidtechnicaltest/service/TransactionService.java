@@ -1,5 +1,6 @@
 package dev.joaobertholino.tgidtechnicaltest.service;
 
+import dev.joaobertholino.tgidtechnicaltest.controller.model.request.Request;
 import dev.joaobertholino.tgidtechnicaltest.model.Client;
 import dev.joaobertholino.tgidtechnicaltest.model.Enterprise;
 import dev.joaobertholino.tgidtechnicaltest.model.Transaction;
@@ -18,7 +19,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 @Service
 public class TransactionService implements ServiceInterface {
@@ -39,18 +43,18 @@ public class TransactionService implements ServiceInterface {
 
 	@Override
 	@Transactional
-	public void carryOutTransaction(Integer enterpriseId, Integer clientId, BigDecimal value, TransactionType transactionType) {
-		Enterprise enterprise = this.enterpriseRepository.findById(enterpriseId).orElseThrow(() -> new EnterpriseNotFound("Enterprise not found in database"));
-		Client client = this.clientRepository.findById(clientId).orElseThrow(() -> new ClientNotFound("Client not found in database"));
+	public void carryOutTransaction(Request request) {
+		Enterprise enterprise = this.enterpriseRepository.findById(request.enterpriseId()).orElseThrow(() -> new EnterpriseNotFound("Enterprise not found in database"));
+		Client client = this.clientRepository.findById(request.clientId()).orElseThrow(() -> new ClientNotFound("Client not found in database"));
 
-		Double totalTaxPercent = calculateTaxPercent(enterprise, transactionType);
-		BigDecimal totalDiscount = value.multiply(BigDecimal.valueOf(totalTaxPercent));
+		Double totalTaxPercent = calculateTaxPercent(enterprise, request.transactionType());
+		BigDecimal totalDiscount = request.value().multiply(BigDecimal.valueOf(totalTaxPercent));
 
-		BigDecimal finalValue = calculateFinalValue(enterprise, transactionType, value, totalDiscount);
+		BigDecimal finalValue = calculateFinalValue(enterprise, request.transactionType(), request.value(), totalDiscount);
 		enterprise.setBalance(finalValue);
 		this.enterpriseRepository.save(enterprise);
 
-		Transaction transaction = createTransaction(enterprise, client, transactionType, value, totalDiscount);
+		Transaction transaction = createTransaction(enterprise, client, request.transactionType(), request.value(), totalDiscount);
 		this.transactionRepository.save(transaction);
 
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
