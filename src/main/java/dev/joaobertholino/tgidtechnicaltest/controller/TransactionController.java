@@ -1,6 +1,6 @@
 package dev.joaobertholino.tgidtechnicaltest.controller;
 
-import dev.joaobertholino.tgidtechnicaltest.controller.model.request.Request;
+import dev.joaobertholino.tgidtechnicaltest.controller.requesttemplate.Request;
 import dev.joaobertholino.tgidtechnicaltest.service.ServiceInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

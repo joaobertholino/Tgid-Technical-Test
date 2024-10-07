@@ -1,6 +1,6 @@
 package dev.joaobertholino.tgidtechnicaltest.service;
 
-import dev.joaobertholino.tgidtechnicaltest.controller.model.request.Request;
+import dev.joaobertholino.tgidtechnicaltest.controller.requesttemplate.Request;
 import dev.joaobertholino.tgidtechnicaltest.model.Client;
 import dev.joaobertholino.tgidtechnicaltest.model.Enterprise;
 import dev.joaobertholino.tgidtechnicaltest.model.Transaction;

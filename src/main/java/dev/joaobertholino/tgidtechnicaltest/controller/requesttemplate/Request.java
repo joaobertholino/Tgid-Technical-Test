@@ -1,4 +1,4 @@
-package dev.joaobertholino.tgidtechnicaltest.controller.model.request;
+package dev.joaobertholino.tgidtechnicaltest.controller.requesttemplate;
 
 import dev.joaobertholino.tgidtechnicaltest.model.enums.TransactionType;
 
