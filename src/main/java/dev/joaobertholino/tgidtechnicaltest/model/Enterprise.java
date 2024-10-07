@@ -3,7 +3,6 @@ package dev.joaobertholino.tgidtechnicaltest.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.Serial;
 import java.io.Serializable;

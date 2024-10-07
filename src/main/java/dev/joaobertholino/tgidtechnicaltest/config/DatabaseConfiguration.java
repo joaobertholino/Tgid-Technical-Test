@@ -8,9 +8,7 @@ import dev.joaobertholino.tgidtechnicaltest.repository.ClientRepository;
 import dev.joaobertholino.tgidtechnicaltest.repository.EnterpriseRepository;
 import dev.joaobertholino.tgidtechnicaltest.repository.TaxRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
