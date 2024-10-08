@@ -18,10 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 @Service
@@ -57,8 +55,7 @@ public class TransactionService implements ServiceInterface {
 		Transaction transaction = createTransaction(enterprise, client, request.transactionType(), request.value(), totalDiscount);
 		this.transactionRepository.save(transaction);
 
-		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-		SendMailUtil.sandNotificationClient(client, "Transaction carried out", "Your transaction worth " + currencyFormatter.format(transaction.getValue()) + " was successful.");
+		SendMailUtil.sandNotificationClient(client, transaction.getValue(), transaction.getTransactionType());
 		this.restTemplate.postForObject(this.webhookUrl, transaction, String.class);
 	}
 
